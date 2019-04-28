@@ -25,7 +25,7 @@ pub struct Player {
 }
 
 pub struct Level {
-    map: [[u8; 8]; 8],
+    map: [[u8; 16]; 16],
 }
 
 impl Level {
@@ -35,10 +35,11 @@ impl Level {
         for i in &self.map {
             for j in i {
                 draw_block(n_x, n_y, *j, game, c, gl);
-                n_x += SQUARE_SIZE;
+                n_x += 1.0;
+                println!("x: {:?}, y: {:?}", n_x, n_y);
             }
-            n_y = 0.0;
-            n_y += SQUARE_SIZE;
+            n_x = 0.0;
+            n_y += 1.0;
         }
     }
 }
@@ -64,6 +65,7 @@ fn draw_block(
     gl: &mut opengl_graphics::GlGraphics,
 ) {
     use graphics::*;
+    const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
     const RED: [f32; 4] = [1.0, 0.0, 0.0, 1.0];
     const YELLOW: [f32; 4] = [1.0, 1.0, 0.0, 1.0];
     const GREEN: [f32; 4] = [0.0, 1.0, 0.0, 1.0];
@@ -73,6 +75,7 @@ fn draw_block(
     let square = rectangle::square(0.0, 0.0, SQUARE_SIZE);
     let transform = c.transform.trans(tx, ty);
     match b {
+        // 0 => rectangle(BLACK, square, transform, gl),
         1 => rectangle(RED, square, transform, gl),
         2 => rectangle(YELLOW, square, transform, gl),
         3 => rectangle(GREEN, square, transform, gl),
@@ -116,14 +119,22 @@ fn main() {
         .unwrap();
 
     let mut map1 = [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 1, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 1, 0, 0, 0],
-        [0, 1, 1, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+        [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+        [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
     ];
     let level1 = Level { map: map1 };
     // Create a new game and run it.
